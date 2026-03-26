@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}O mnie – {{ block.super }}{% endblock %}
+
+{% block extra_styles %}
+.about-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.about-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    filter: grayscale(20%);
+}
+
+.about-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--bg3);
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.about-text p { margin-bottom: 1.4em; color: var(--text-muted); font-size: 1.05rem; }
+
+@media (max-width: 768px) {
+    .about-wrapper { grid-template-columns: 1fr; gap: 30px; }
+    .about-photo { max-width: 300px; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h2 class="section-title">O mnie</h2>
+    <div class="about-wrapper">
+        <div>
+            {% if about and about.photo %}
+                <img src="{{ about.photo.url }}" alt="Zdjęcie profilowe" class="about-photo">
+            {% else %}
+                <div class="about-photo-placeholder">Zdjęcie profilowe</div>
+            {% endif %}
+        </div>
+        <div class="about-text">
+            {% if about %}
+                {{ about.content|linebreaks }}
+            {% else %}
+                <p>Dodaj treść sekcji "O mnie" w panelu administracyjnym.</p>
+            {% endif %}
+            <a href="{% url 'kontakt' %}" class="btn" style="margin-top:20px;">Napisz do mnie</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

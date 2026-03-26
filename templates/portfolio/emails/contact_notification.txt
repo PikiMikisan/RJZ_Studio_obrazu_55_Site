@@ -1,0 +1,15 @@
+{{ site_name }}
+Nowa wiadomosc z formularza kontaktowego
+
+Temat: {{ contact_message.subject }}
+Data: {{ contact_message.sent_at|date:"d.m.Y H:i" }}
+
+Od: {{ contact_message.name }}
+Email: {{ contact_message.email }}
+Telefon: {% if contact_message.phone %}{{ contact_message.phone }}{% else %}Nie podano{% endif %}
+
+Wiadomosc:
+{{ contact_message.message }}
+
+Strona:
+{{ home_url }}

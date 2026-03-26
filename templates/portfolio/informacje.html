@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Informacje – {{ block.super }}{% endblock %}
+
+{% block extra_styles %}
+.hero { height: calc(100vh - var(--nav-h)); }
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 4px;
+    margin-top: 0;
+}
+
+.featured-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--bg3);
+}
+
+.featured-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    filter: brightness(0.85);
+}
+
+.featured-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1);
+}
+
+.info-content {
+    max-width: 780px;
+}
+
+.info-content p { margin-bottom: 1.2em; color: var(--text-muted); }
+
+.cta-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero">
+    {% if site_info and site_info.hero_image %}
+    <div class="hero-bg" style="background-image: url('{{ site_info.hero_image.url }}')"></div>
+    {% else %}
+    <div class="hero-bg" style="background: linear-gradient(135deg, #111 0%, #1e1e1e 100%)"></div>
+    {% endif %}
+    <div class="hero-content">
+        <h1>{% if site_info %}{{ site_info.title }}{% else %}Fotografia{% endif %}</h1>
+        {% if site_info and site_info.tagline %}
+        <p>{{ site_info.tagline }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- INFO SEKCJA -->
+<div class="section">
+    <h2 class="section-title">Informacje</h2>
+    <div class="info-content">
+        {% if site_info %}
+            {{ site_info.info_content|linebreaks }}
+        {% else %}
+            <p>Dodaj treść strony w panelu administracyjnym.</p>
+        {% endif %}
+    </div>
+    <div class="cta-row">
+        <a href="{% url 'portfolio' %}" class="btn">Zobacz portfolio</a>
+        <a href="{% url 'kontakt' %}" class="btn">Kontakt</a>
+    </div>
+</div>
+
+<!-- WYRÓŻNIONE ZDJĘCIA -->
+{% if featured_photos %}
+<div class="featured-grid">
+    {% for photo in featured_photos %}
+    <div class="featured-item">
+        <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

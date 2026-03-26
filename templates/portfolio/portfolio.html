@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Portfolio – {{ block.super }}{% endblock %}
+
+{% block extra_styles %}
+.category-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.tab-btn {
+    padding: 8px 20px;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Helvetica Neue', sans-serif;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover, .tab-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 6px;
+}
+
+.photo-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg3);
+    cursor: pointer;
+}
+
+.photo-item img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease, filter 0.3s;
+    filter: brightness(0.9);
+}
+
+.photo-item:hover img {
+    transform: scale(1.04);
+    filter: brightness(1);
+}
+
+.photo-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: 20px;
+    text-align: center;
+}
+
+.photo-item:hover .photo-overlay { opacity: 1; }
+
+.photo-overlay h3 {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: #fff;
+    font-weight: 400;
+}
+
+.photo-overlay p {
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-top: 6px;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+.no-photos {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 40px 0;
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox.open { display: flex; }
+
+.lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 20px; right: 24px;
+    font-size: 2rem;
+    color: var(--text);
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.lightbox-close:hover { color: var(--accent); }
+{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h2 class="section-title">Portfolio</h2>
+
+    <!-- Filtry kategorii -->
+    <div class="category-tabs">
+        <a href="{% url 'portfolio' %}" class="tab-btn {% if not active_category %}active{% endif %}">Wszystkie</a>
+        {% for cat in categories %}
+        <a href="{% url 'portfolio_category' cat.slug %}"
+           class="tab-btn {% if active_category.slug == cat.slug %}active{% endif %}">
+            {{ cat.name }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Siatka zdjęć -->
+    {% if photos %}
+    <div class="photo-grid">
+        {% for photo in photos %}
+        <div class="photo-item" onclick="openLightbox('{{ photo.image.url }}', '{{ photo.title }}')">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+            <div class="photo-overlay">
+                {% if photo.title %}<h3>{{ photo.title }}</h3>{% endif %}
+                {% if photo.description %}<p>{{ photo.description|truncatechars:80 }}</p>{% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-photos">Brak zdjęć w tej kategorii. Dodaj je w panelu administracyjnym.</p>
+    {% endif %}
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightboxImg" src="" alt="">
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function openLightbox(src, alt) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxImg').alt = alt || '';
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+});
+</script>
+{% endblock %}
