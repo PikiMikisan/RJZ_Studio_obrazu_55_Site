@@ -1,5 +1,6 @@
 from unittest.mock import MagicMock, patch
 
+from django.db.utils import OperationalError
 from django.test import TestCase
 from django.urls import reverse
 
@@ -92,3 +93,19 @@ class ContactViewTests(TestCase):
             "Nie udalo sie wyslac maila. Twoja wiadomosc zostala zapisana, sprobuj ponownie za chwile.",
         )
         self.assertEqual(ContactMessage.objects.count(), 1)
+
+
+class ResilienceTests(TestCase):
+    def test_healthz_returns_ok_without_database_access(self):
+        response = self.client.get(reverse("healthz"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"ok")
+
+    @patch("portfolio.views.PortfolioPhoto.objects.filter", side_effect=OperationalError("db down"))
+    @patch("portfolio.views.SiteInfo.objects.first", side_effect=OperationalError("db down"))
+    def test_homepage_stays_up_when_database_read_fails(self, _site_info, _photos):
+        response = self.client.get(reverse("informacje"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Dodaj treść strony w panelu administracyjnym.")

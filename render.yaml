@@ -3,6 +3,7 @@ services:
     name: photographer-site
     env: python
     plan: free
+    healthCheckPath: /healthz/
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
     startCommand: python manage.py migrate && gunicorn photographer_site.wsgi:application --bind 0.0.0.0:$PORT
     envVars:

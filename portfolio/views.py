@@ -3,6 +3,9 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
+from django.db import DatabaseError
+from django.db.utils import OperationalError, ProgrammingError
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
@@ -10,15 +13,32 @@ from .forms import ContactForm
 from .models import AboutMe, PortfolioCategory, PortfolioPhoto, SiteInfo
 
 logger = logging.getLogger(__name__)
+DB_EXCEPTIONS = (DatabaseError, OperationalError, ProgrammingError)
+
+
+def safe_db_call(callback, default, label):
+    try:
+        return callback()
+    except DB_EXCEPTIONS:
+        logger.exception("%s failed.", label)
+        return default
 
 
 def get_site_info():
-    return SiteInfo.objects.first()
+    return safe_db_call(lambda: SiteInfo.objects.first(), None, "Loading site info")
+
+
+def healthz(_request):
+    return HttpResponse("ok", content_type="text/plain")
 
 
 def informacje(request):
     site_info = get_site_info()
-    featured_photos = PortfolioPhoto.objects.filter(is_featured=True)[:6]
+    featured_photos = safe_db_call(
+        lambda: list(PortfolioPhoto.objects.filter(is_featured=True)[:6]),
+        [],
+        "Loading featured photos",
+    )
     return render(
         request,
         "portfolio/informacje.html",
@@ -31,7 +51,7 @@ def informacje(request):
 
 
 def o_mnie(request):
-    about = AboutMe.objects.first()
+    about = safe_db_call(lambda: AboutMe.objects.first(), None, "Loading about section")
     site_info = get_site_info()
     return render(
         request,
@@ -46,14 +66,27 @@ def o_mnie(request):
 
 def portfolio_view(request, slug=None):
     site_info = get_site_info()
-    categories = PortfolioCategory.objects.all()
+    categories = safe_db_call(
+        lambda: list(PortfolioCategory.objects.all()),
+        [],
+        "Loading portfolio categories",
+    )
     active_category = None
 
     if slug:
-        active_category = get_object_or_404(PortfolioCategory, slug=slug)
-        photos = PortfolioPhoto.objects.filter(category=active_category)
+        try:
+            active_category = get_object_or_404(PortfolioCategory, slug=slug)
+            photos = list(PortfolioPhoto.objects.filter(category=active_category))
+        except DB_EXCEPTIONS:
+            logger.exception("Loading portfolio category failed.")
+            active_category = None
+            photos = []
     else:
-        photos = PortfolioPhoto.objects.all()
+        photos = safe_db_call(
+            lambda: list(PortfolioPhoto.objects.all()),
+            [],
+            "Loading portfolio photos",
+        )
 
     return render(
         request,
