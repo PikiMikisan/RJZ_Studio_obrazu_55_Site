@@ -26,6 +26,13 @@ def env_int(name, default=0):
     return int(value)
 
 
+def should_require_db_ssl(database_url):
+    if not database_url:
+        return False
+    scheme = database_url.split(":", 1)[0].lower()
+    return scheme in {"postgres", "postgresql", "mysql", "mysql2"}
+
+
 IS_RENDER = os.getenv("RENDER", "").lower() == "true"
 
 DEBUG = env_bool("DEBUG", default=not IS_RENDER)
@@ -100,7 +107,7 @@ if database_url:
             database_url,
             conn_max_age=600,
             conn_health_checks=True,
-            ssl_require=not DEBUG,
+            ssl_require=should_require_db_ssl(database_url),
         )
     }
 else:
@@ -163,5 +170,3 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
-
-    print(DEBUG)
