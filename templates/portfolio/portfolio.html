@@ -145,7 +145,11 @@
     {% if photos %}
     <div class="photo-grid">
         {% for photo in photos %}
-        <div class="photo-item" onclick="openLightbox('{{ photo.image.url }}', '{{ photo.title }}')">
+        <div
+            class="photo-item"
+            data-lightbox-src="{{ photo.image.url }}"
+            data-lightbox-alt="{{ photo.title }}"
+        >
             <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
             <div class="photo-overlay">
                 {% if photo.title %}<h3>{{ photo.title }}</h3>{% endif %}
@@ -183,6 +187,12 @@ function closeLightbox() {
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeLightbox();
+});
+
+document.querySelectorAll('.photo-item').forEach(item => {
+    item.addEventListener('click', () => {
+        openLightbox(item.dataset.lightboxSrc, item.dataset.lightboxAlt);
+    });
 });
 </script>
 {% endblock %}

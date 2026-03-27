@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
@@ -6,6 +8,8 @@ from django.template.loader import render_to_string
 
 from .forms import ContactForm
 from .models import AboutMe, PortfolioCategory, PortfolioPhoto, SiteInfo
+
+logger = logging.getLogger(__name__)
 
 
 def get_site_info():
@@ -79,15 +83,20 @@ def send_contact_notification(request, contact_message, site_info):
     text_body = render_to_string("portfolio/emails/contact_notification.txt", context)
     html_body = render_to_string("portfolio/emails/contact_notification.html", context)
 
-    email = EmailMultiAlternatives(
-        subject=f"[{site_name}] Nowa wiadomosc: {contact_message.subject}",
-        body=text_body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_EMAIL],
-        reply_to=[contact_message.email],
-    )
-    email.attach_alternative(html_body, "text/html")
-    email.send(fail_silently=False)
+    try:
+        email = EmailMultiAlternatives(
+            subject=f"[{site_name}] Nowa wiadomosc: {contact_message.subject}",
+            body=text_body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACT_EMAIL],
+            reply_to=[contact_message.email],
+        )
+        email.attach_alternative(html_body, "text/html")
+        email.send(fail_silently=False)
+        return True
+    except Exception:
+        logger.exception("Contact email could not be sent.")
+        return False
 
 
 def kontakt(request):
@@ -98,14 +107,14 @@ def kontakt(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             contact_message = form.save()
-            try:
-                send_contact_notification(request, contact_message, site_info)
+            email_sent = send_contact_notification(request, contact_message, site_info)
+            if email_sent:
                 messages.success(request, "Wiadomosc zostala wyslana. Odpowiem wkrotce.")
-            except Exception:
+            else:
                 messages.warning(
                     request,
-                    "Wiadomosc zapisala sie w bazie, ale wysylka maila nie powiodla sie. "
-                    "Sprawdz konfiguracje Gmail SMTP w zmiennych srodowiskowych.",
+                    "Nie udalo sie wyslac maila. Twoja wiadomosc zostala zapisana, "
+                    "sprobuj ponownie za chwile.",
                 )
             return redirect("kontakt")
 
