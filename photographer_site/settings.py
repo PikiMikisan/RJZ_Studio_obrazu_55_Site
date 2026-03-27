@@ -34,6 +34,11 @@ def should_require_db_ssl(database_url):
 
 
 IS_RENDER = os.getenv("RENDER", "").lower() == "true"
+REPO_DB_PATH = BASE_DIR / "db.sqlite3"
+USE_COMMITTED_SQLITE = env_bool(
+    "USE_COMMITTED_SQLITE",
+    default=IS_RENDER and REPO_DB_PATH.exists(),
+)
 
 DEBUG = env_bool("DEBUG", default=not IS_RENDER)
 
@@ -101,7 +106,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "photographer_site.wsgi.application"
 
 database_url = os.getenv("DATABASE_URL")
-if database_url:
+if USE_COMMITTED_SQLITE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": REPO_DB_PATH,
+        }
+    }
+elif database_url:
     DATABASES = {
         "default": dj_database_url.parse(
             database_url,
