@@ -1,12 +1,13 @@
+from io import StringIO
 from unittest.mock import MagicMock, patch
 
+from django.core.management import call_command
 from django.db.utils import OperationalError
 from django.test import TestCase
 from django.urls import reverse
 
 from .email_backend import GmailOAuth2EmailBackend
-from .models import ContactMessage
-from .models import PortfolioPhoto
+from .models import ContactMessage, PortfolioCategory, PortfolioPhoto
 
 
 class PortfolioTemplateTests(TestCase):
@@ -108,4 +109,25 @@ class ResilienceTests(TestCase):
         response = self.client.get(reverse("informacje"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Dodaj treść strony w panelu administracyjnym.")
+        self.assertContains(response, "panelu administracyjnym.")
+
+
+class SeedInitialContentCommandTests(TestCase):
+    def test_seed_initial_content_loads_fixture_into_empty_database(self):
+        stdout = StringIO()
+
+        call_command("seed_initial_content", stdout=stdout)
+
+        self.assertIn("Initial content loaded.", stdout.getvalue())
+        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertEqual(PortfolioCategory.objects.count(), 6)
+        self.assertEqual(PortfolioPhoto.objects.count(), 12)
+
+    def test_seed_initial_content_skips_when_content_already_exists(self):
+        PortfolioCategory.objects.create(name="Test", slug="test", order=0)
+        stdout = StringIO()
+
+        call_command("seed_initial_content", stdout=stdout)
+
+        self.assertIn("Initial content skipped", stdout.getvalue())
+        self.assertEqual(PortfolioCategory.objects.filter(slug="test").count(), 1)

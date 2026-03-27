@@ -1,0 +1,233 @@
+[
+{
+  "model": "portfolio.siteinfo",
+  "pk": 1,
+  "fields": {
+    "title": "Renata Jędrasiak-Zajerkoff",
+    "logo": "logo/RJZ_Studio_Obrazu_55_poziomo.png",
+    "tagline": "Fotograf",
+    "hero_image": "hero/aman__avi04-camera-4563775.jpg",
+    "info_content": "Zajmuję się profesjonalną fotografią wnętrz, packshotami produktowymi oraz fotografią eventową. Tworzę dopracowane, estetyczne kadry, które podkreślają charakter przestrzeni, jakość produktów i wyjątkową atmosferę wydarzeń. Każdy projekt realizuję z dbałością o światło, kompozycję i detale, tak aby zdjęcia nie tylko przyciągały uwagę, ale również budowały wizerunek marki, firmy lub miejsca. Stawiam na wysoką jakość, spójność wizualną i fotografie, które skutecznie prezentują ofertę w materiałach reklamowych, mediach społecznościowych oraz na stronach internetowych.",
+    "updated_at": "2026-03-26T14:58:59.687Z"
+  }
+},
+{
+  "model": "portfolio.aboutme",
+  "pk": 1,
+  "fields": {
+    "photo": "about/ChatGPT_Image_18_mar_2026_13_57_38.png",
+    "content": "Fotografia to dla mnie coś więcej niż tylko zdjęcia. To sposób na uchwycenie klimatu wnętrz, wydobycie charakteru produktów i zatrzymanie wyjątkowych chwil podczas ważnych wydarzeń. W swojej pracy stawiam na estetykę, detale i naturalność, bo wierzę, że dobre zdjęcie powinno nie tylko wyglądać dobrze, ale też coś opowiadać. Tworzę kadry, które pomagają pokazać przestrzeń, markę lub emocje w autentyczny i atrakcyjny sposób.",
+    "updated_at": "2026-03-18T12:58:30.665Z"
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 1,
+  "fields": {
+    "name": "PACKSHOTY",
+    "slug": "packshots",
+    "order": 1
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 2,
+  "fields": {
+    "name": "WIZUALIZACJE",
+    "slug": "wizualizacje",
+    "order": 0
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 3,
+  "fields": {
+    "name": "LUDZIE",
+    "slug": "ludzie",
+    "order": 0
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 4,
+  "fields": {
+    "name": "ARANŻACJE",
+    "slug": "aranzacje",
+    "order": 0
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 5,
+  "fields": {
+    "name": "BIZNES",
+    "slug": "biznes",
+    "order": 0
+  }
+},
+{
+  "model": "portfolio.portfoliocategory",
+  "pk": 6,
+  "fields": {
+    "name": "REPORTAŻ",
+    "slug": "reportaz",
+    "order": 0
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "title": "Bransoletka skórzana premium",
+    "description": "ackshot bransoletki wykonany z dbałością o detal, fakturę materiału i eleganckie wykończenie. Zdjęcie zostało przygotowane tak, aby podkreślić jakość produktu, jego styl oraz estetykę prezentacji w sprzedaży internetowej i materiałach promocyjnych.",
+    "image": "portfolio/778a2a82-4f0d-4f57-b07e-ff680f70a47f.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:01:07.991Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 2,
+  "fields": {
+    "category": 4,
+    "title": "Zegarek damski premium",
+    "description": "Profesjonalne zdjęcie produktowe zegarka wykonane z dbałością o estetykę, światło i kompozycję. Ujęcie zostało przygotowane tak, aby podkreślić elegancję produktu, subtelne detale tarczy oraz luksusowy charakter prezentacji, idealny do sklepu internetowego, katalogu i materiałów promocyjnych.",
+    "image": "portfolio/9026fe13-3668-4bdf-a4f0-065e3f16b1fe.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:02:52.491Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 3,
+  "fields": {
+    "category": 1,
+    "title": "Perfumy premium",
+    "description": "Profesjonalne zdjęcie produktowe perfum wykonane z dbałością o światło, kompozycję i elegancką prezentację. Ujęcie podkreśla luksusowy charakter produktu, jego formę oraz estetyczne detale, tworząc atrakcyjny materiał do sklepu internetowego, katalogu i komunikacji wizualnej marki.",
+    "image": "portfolio/fb38e2c1-af00-4241-938b-34458c120522.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:03:48.822Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 4,
+  "fields": {
+    "category": 4,
+    "title": "Stylizowana fotografia produktu",
+    "description": "Fotografia produktowa wykonana w klimatycznej, dopracowanej aranżacji, z naciskiem na światło, kompozycję i charakter ujęcia. Celem zdjęcia było stworzenie estetycznej prezentacji produktu, która przyciąga uwagę i buduje elegancki, wyrazisty wizerunek wizualny.",
+    "image": "portfolio/d4a8d0af-0705-4b40-8ae6-af875b165e8f.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:04:31.893Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 5,
+  "fields": {
+    "category": 2,
+    "title": "Eleganckie wnętrze salonu",
+    "description": "Fotografia wnętrza wykonana z dbałością o światło, kompozycję i estetykę przestrzeni. Ujęcie podkreśla charakter aranżacji, kolorystykę oraz detale wyposażenia, tworząc atrakcyjną i spójną prezentację wnętrza do portfolio, oferty lub materiałów promocyjnych.",
+    "image": "portfolio/8f00f0b4-3a07-4561-97f9-89c3cc8ff02c.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:10:37.500Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 6,
+  "fields": {
+    "category": 2,
+    "title": "Przytulna aranżacja sypialni",
+    "description": "Profesjonalne zdjęcie wnętrza ukazujące jasną, harmonijną i przyjazną przestrzeń. Ujęcie zostało wykonane z dbałością o światło, kompozycję oraz detale aranżacyjne, aby podkreślić charakter pomieszczenia i jego estetyczny, komfortowy klimat.",
+    "image": "portfolio/1e7f9d57-0246-4361-bc3b-d8c3f51ef442.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:11:18.688Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 7,
+  "fields": {
+    "category": 3,
+    "title": "Portret w świetle i cieniu",
+    "description": "Czarno-biały portret wykonany z naciskiem na emocje, światło i wyraz kadru. Ujęcie podkreśla charakter fotografowanej osoby oraz siłę kontrastu między światłem a cieniem, tworząc sugestywną, artystyczną kompozycję.",
+    "image": "portfolio/4e8d20fa-fbe5-47a2-a51a-24bf8fa6ec56.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:11:55.186Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 8,
+  "fields": {
+    "category": 3,
+    "title": "Portret plenerowy czarno-biały",
+    "description": "Czarno-biały portret wykonany w naturalnym otoczeniu, z naciskiem na autentyczność, emocje i swobodny charakter ujęcia. Kadr podkreśla osobowość fotografowanej osoby oraz ponadczasową estetykę fotografii portretowej.",
+    "image": "portfolio/28e20fab-e184-4f2e-9ed0-e1630ae706c3.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:12:31.297Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 10,
+  "fields": {
+    "category": 3,
+    "title": "Portret męski czarno-biały",
+    "description": "Czarno-biały portret wykonany z naciskiem na charakter, światło i naturalny wyraz fotografowanej osoby. Kadr podkreśla rysy twarzy, spojrzenie oraz ponadczasową estetykę portretu, tworząc eleganckie i wyraziste ujęcie.",
+    "image": "portfolio/a33433e9-c05f-4179-a2ee-3ce7bafc58eb.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:13:50.175Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 11,
+  "fields": {
+    "category": 6,
+    "title": "Portret biznesowy kobiecy",
+    "description": "Profesjonalny portret wizerunkowy wykonany w nowoczesnym wnętrzu, z naciskiem na naturalność, pewność siebie i estetykę kadru. Ujęcie podkreśla osobowość fotografowanej osoby oraz buduje profesjonalny, a jednocześnie swobodny i autentyczny wizerunek.",
+    "image": "portfolio/6e403775-a792-41a3-8766-bb278b36e14a.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:15:09.719Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 12,
+  "fields": {
+    "category": 3,
+    "title": "Kobiecy portret w plenerze",
+    "description": "Portret wykonany w naturalnym otoczeniu, z naciskiem na światło, subtelność i estetykę kadru. Ujęcie podkreśla delikatność, naturalne piękno oraz spokojny, elegancki charakter fotografii, tworząc lekki i harmonijny obraz.",
+    "image": "portfolio/2881f115-273d-4f2f-99ee-1424d1d5af20.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:15:56.116Z"
+  }
+},
+{
+  "model": "portfolio.portfoliophoto",
+  "pk": 13,
+  "fields": {
+    "category": 3,
+    "title": "Portret dziecięcy artystyczny",
+    "description": "Portret dziecka wykonany z naciskiem na emocje, spojrzenie i wyjątkowy charakter chwili. Ujęcie podkreśla naturalność, ekspresję oraz subtelny, artystyczny klimat fotografii, tworząc ciepły i zapadający w pamięć obraz.",
+    "image": "portfolio/8785f292-39d7-4c96-bd2b-9e74aad85cf8.jpg",
+    "order": 0,
+    "is_featured": false,
+    "created_at": "2026-03-18T13:16:50.008Z"
+  }
+}
+]

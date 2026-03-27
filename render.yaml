@@ -5,12 +5,12 @@ services:
     plan: free
     healthCheckPath: /healthz/
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate && gunicorn photographer_site.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: python manage.py migrate && python manage.py seed_initial_content && gunicorn photographer_site.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0
       - key: DEBUG
-        value: "True"
+        value: "False"
       - key: SECURE_HSTS_SECONDS
         value: "31536000"
       - key: SECRET_KEY
