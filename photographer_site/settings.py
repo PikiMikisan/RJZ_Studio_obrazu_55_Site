@@ -49,7 +49,9 @@ if not SECRET_KEY:
     else:
         raise ImproperlyConfigured("SECRET_KEY env var is required when DEBUG=False.")
 
-default_allowed_hosts = ["127.0.0.1", "localhost"]
+default_allowed_hosts = ["127.0.0.1", "localhost", "[::1]"]
+if IS_RENDER:
+    default_allowed_hosts.append(".onrender.com")
 render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if render_hostname:
     default_allowed_hosts.append(render_hostname)
@@ -75,6 +77,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "portfolio.middleware.RenderHealthcheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
