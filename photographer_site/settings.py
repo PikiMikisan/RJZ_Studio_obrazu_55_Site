@@ -33,18 +33,12 @@ def should_require_db_ssl(database_url):
     return scheme in {"postgres", "postgresql", "mysql", "mysql2"}
 
 
-IS_RENDER = os.getenv("RENDER", "").lower() == "true"
-REPO_DB_PATH = BASE_DIR / "db.sqlite3"
-USE_COMMITTED_SQLITE = env_bool(
-    "USE_COMMITTED_SQLITE",
-    default=IS_RENDER and REPO_DB_PATH.exists(),
-)
 PROJECT_PUBLIC_HOSTS = [
     "rjz-studio-obrazu-55.pl",
     "www.rjz-studio-obrazu-55.pl",
 ]
 
-DEBUG = env_bool("DEBUG", default=not IS_RENDER)
+DEBUG = env_bool("DEBUG", default=True)
 
 SECRET_KEY = os.getenv("SECRET_KEY", "")
 if not SECRET_KEY:
@@ -54,19 +48,11 @@ if not SECRET_KEY:
         raise ImproperlyConfigured("SECRET_KEY env var is required when DEBUG=False.")
 
 default_allowed_hosts = ["127.0.0.1", "localhost", "[::1]"]
-if IS_RENDER:
-    default_allowed_hosts.append(".onrender.com")
 default_allowed_hosts.extend(PROJECT_PUBLIC_HOSTS)
-render_hostname = os.getenv("RENDER_EXTERNAL_HOSTNAME")
-if render_hostname:
-    default_allowed_hosts.append(render_hostname)
 
 ALLOWED_HOSTS = list(dict.fromkeys(default_allowed_hosts + env_list("ALLOWED_HOSTS")))
 
-default_csrf_trusted_origins = []
-if render_hostname:
-    default_csrf_trusted_origins.append(f"https://{render_hostname}")
-default_csrf_trusted_origins.extend([f"https://{host}" for host in PROJECT_PUBLIC_HOSTS])
+default_csrf_trusted_origins = [f"https://{host}" for host in PROJECT_PUBLIC_HOSTS]
 
 CSRF_TRUSTED_ORIGINS = list(
     dict.fromkeys(default_csrf_trusted_origins + env_list("CSRF_TRUSTED_ORIGINS"))
@@ -83,7 +69,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "portfolio.middleware.RenderHealthcheckMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -115,14 +100,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "photographer_site.wsgi.application"
 
 database_url = os.getenv("DATABASE_URL")
-if USE_COMMITTED_SQLITE:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": REPO_DB_PATH,
-        }
-    }
-elif database_url:
+if database_url:
     DATABASES = {
         "default": dj_database_url.parse(
             database_url,

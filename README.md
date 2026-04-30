@@ -1,12 +1,12 @@
 # Photographer Site - Django
 
-Prosty CMS dla strony fotografa na Django z deployem przygotowanym pod Render.
+Prosty CMS dla strony fotografa na Django.
 
 ## Lokalny start
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate
+source .venv/bin/activate
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
@@ -61,40 +61,49 @@ Przy `DEBUG=False` aplikacja nie wystartuje bez `SECRET_KEY`.
 Mozesz wygenerowac nowy klucz poleceniem:
 
 ```bash
-.venv\Scripts\python.exe -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
-## Render
+## Ubuntu
 
-Repo zawiera plik `render.yaml`, wiec mozesz zrobic deploy jako Blueprint albo recznie jako Web Service.
-
-Build command:
+Przykladowy start na czystym serwerze:
 
 ```bash
-pip install -r requirements.txt && python manage.py collectstatic --noinput
+sudo apt update
+sudo apt install python3-venv python3-pip
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic --noinput
+gunicorn photographer_site.wsgi:application --bind 127.0.0.1:8000
 ```
 
-Start command:
-
-```bash
-python manage.py migrate && gunicorn photographer_site.wsgi:application --bind 0.0.0.0:$PORT
-```
-
-Na Renderze ustaw:
+Na produkcji ustaw w srodowisku:
 
 1. `SECRET_KEY`
-2. `DATABASE_URL` - opcjonalnie, jesli chcesz wyjsc poza lokalne SQLite
-3. `EMAIL_HOST_USER`
-4. `GMAIL_CLIENT_ID`
-5. `GMAIL_CLIENT_SECRET`
-6. `GMAIL_REFRESH_TOKEN`
-7. `DEFAULT_FROM_EMAIL`
-8. `CONTACT_EMAIL`
+2. `DEBUG=False`
+3. `ALLOWED_HOSTS`
+4. `CSRF_TRUSTED_ORIGINS`
+5. `DATABASE_URL` - opcjonalnie, jesli chcesz wyjsc poza SQLite
+6. `EMAIL_HOST_USER`
+7. `GMAIL_CLIENT_ID`
+8. `GMAIL_CLIENT_SECRET`
+9. `GMAIL_REFRESH_TOKEN`
+10. `DEFAULT_FROM_EMAIL`
+11. `CONTACT_EMAIL`
 
 Opcjonalnie:
 
-- `ALLOWED_HOSTS` - jesli dodasz wlasna domene
-- `CSRF_TRUSTED_ORIGINS` - jesli dodasz wlasna domene, np. `https://twojadomena.pl`
+- `SECURE_SSL_REDIRECT=False` - jesli SSL konczy sie poza aplikacja i proxy nie przekazuje `X-Forwarded-Proto`.
+
+## Systemd
+
+Przykladowa komenda dla uslugi:
+
+```bash
+/sciezka/do/projektu/.venv/bin/gunicorn photographer_site.wsgi:application --chdir /sciezka/do/projektu --bind 127.0.0.1:8000
+```
 
 ## Static i media
 

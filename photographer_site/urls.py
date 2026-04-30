@@ -9,7 +9,7 @@ urlpatterns = [
 ]
 
 # Media files are committed to the repository, so we serve them directly
-# from MEDIA_ROOT even in production on Render.
+# from MEDIA_ROOT in this small deployment.
 urlpatterns += [
     re_path(
         rf"^{settings.MEDIA_URL.lstrip('/')}(?P<path>.*)$",

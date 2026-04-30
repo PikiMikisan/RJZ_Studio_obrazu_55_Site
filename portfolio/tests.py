@@ -1,8 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from django.conf import settings
 from django.db.utils import OperationalError
-from django.test import override_settings
 from django.test import TestCase
 from django.urls import reverse
 
@@ -102,33 +100,6 @@ class ResilienceTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b"ok")
-
-    @override_settings(
-        ALLOWED_HOSTS=["example.com"],
-        MIDDLEWARE=settings.MIDDLEWARE,
-    )
-    def test_healthz_allows_invalid_host_for_render_probe(self):
-        response = self.client.get(
-            reverse("healthz"),
-            HTTP_HOST="invalid.render.internal",
-            HTTP_USER_AGENT="Render/1.0",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b"ok")
-
-    @override_settings(
-        ALLOWED_HOSTS=["example.com"],
-        MIDDLEWARE=settings.MIDDLEWARE,
-    )
-    def test_root_head_allows_render_port_probe(self):
-        response = self.client.head(
-            reverse("informacje"),
-            HTTP_HOST="invalid.render.internal",
-            HTTP_USER_AGENT="Go-http-client/1.1",
-        )
-
-        self.assertEqual(response.status_code, 200)
 
     @patch("portfolio.views.PortfolioPhoto.objects.filter", side_effect=OperationalError("db down"))
     @patch("portfolio.views.SiteInfo.objects.first", side_effect=OperationalError("db down"))
