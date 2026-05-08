@@ -25,15 +25,13 @@ Najwazniejsze zmienne:
 - `CSRF_TRUSTED_ORIGINS`
 - `DATABASE_URL`
 - `EMAIL_HOST_USER`
-- `GMAIL_CLIENT_ID`
-- `GMAIL_CLIENT_SECRET`
-- `GMAIL_REFRESH_TOKEN`
+- `EMAIL_HOST_PASSWORD`
 - `DEFAULT_FROM_EMAIL`
 - `CONTACT_EMAIL`
 
 ## Gmail / Google SMTP
 
-Projekt jest ustawiony pod Gmail SMTP z OAuth2:
+Projekt jest ustawiony pod Gmail SMTP z haslem aplikacji Google:
 
 - `EMAIL_HOST=smtp.gmail.com`
 - `EMAIL_PORT=587`
@@ -42,17 +40,15 @@ Projekt jest ustawiony pod Gmail SMTP z OAuth2:
 Ustaw:
 
 - `EMAIL_HOST_USER`
-- `GMAIL_CLIENT_ID`
-- `GMAIL_CLIENT_SECRET`
-- `GMAIL_REFRESH_TOKEN`
+- `EMAIL_HOST_PASSWORD`
 - `DEFAULT_FROM_EMAIL`
 - `CONTACT_EMAIL`
 
 Checklist:
 
-1. Utworz OAuth client w Google Cloud.
-2. Wygeneruj refresh token dla konta Gmail, z ktorego maja wychodzic maile.
-3. Ustaw `EMAIL_HOST_USER`, `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET`, `GMAIL_REFRESH_TOKEN`, `DEFAULT_FROM_EMAIL` i `CONTACT_EMAIL`.
+1. Wlacz weryfikacje dwuetapowa na koncie Google.
+2. Wygeneruj haslo aplikacji dla Gmaila.
+3. Ustaw `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` i `CONTACT_EMAIL`.
 
 ## Secret key
 
@@ -87,11 +83,9 @@ Na produkcji ustaw w srodowisku:
 4. `CSRF_TRUSTED_ORIGINS`
 5. `DATABASE_URL` - opcjonalnie, jesli chcesz wyjsc poza SQLite
 6. `EMAIL_HOST_USER`
-7. `GMAIL_CLIENT_ID`
-8. `GMAIL_CLIENT_SECRET`
-9. `GMAIL_REFRESH_TOKEN`
-10. `DEFAULT_FROM_EMAIL`
-11. `CONTACT_EMAIL`
+7. `EMAIL_HOST_PASSWORD`
+8. `DEFAULT_FROM_EMAIL`
+9. `CONTACT_EMAIL`
 
 Opcjonalnie:
 
