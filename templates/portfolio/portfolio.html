@@ -84,6 +84,10 @@
     color: var(--accent);
     margin-top: 6px;
     font-family: 'Helvetica Neue', sans-serif;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .no-photos {
@@ -101,14 +105,50 @@
     z-index: 2000;
     align-items: center;
     justify-content: center;
+    padding: 70px 24px 32px;
 }
 
 .lightbox.open { display: flex; }
 
+.lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 92vw;
+    max-height: 100%;
+}
+
 .lightbox img {
     max-width: 90vw;
-    max-height: 90vh;
+    max-height: 72vh;
     object-fit: contain;
+}
+
+.lightbox-caption {
+    width: min(760px, 90vw);
+    margin-top: 22px;
+    text-align: center;
+}
+
+.lightbox-caption h3 {
+    margin-bottom: 8px;
+    color: var(--text);
+    font-family: Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.lightbox-caption p {
+    color: var(--text-muted);
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.lightbox-caption:empty {
+    display: none;
 }
 
 .lightbox-close {
@@ -149,11 +189,13 @@
             class="photo-item"
             data-lightbox-src="{{ photo.image.url }}"
             data-lightbox-alt="{{ photo.title }}"
+            data-lightbox-title="{{ photo.title }}"
+            data-lightbox-description="{{ photo.description }}"
         >
             <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
             <div class="photo-overlay">
                 {% if photo.title %}<h3>{{ photo.title }}</h3>{% endif %}
-                {% if photo.description %}<p>{{ photo.description|truncatechars:80 }}</p>{% endif %}
+                {% if photo.description %}<p title="{{ photo.description }}">{{ photo.description }}</p>{% endif %}
             </div>
         </div>
         {% endfor %}
@@ -164,24 +206,41 @@
 </div>
 
 <!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-    <img id="lightboxImg" src="" alt="">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Podglad zdjecia">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Zamknij podglad">&times;</button>
+    <div class="lightbox-content">
+        <img id="lightboxImg" src="" alt="">
+        <div class="lightbox-caption" id="lightboxCaption">
+            <h3 id="lightboxTitle"></h3>
+            <p id="lightboxDescription"></p>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-function openLightbox(src, alt) {
-    document.getElementById('lightboxImg').src = src;
-    document.getElementById('lightboxImg').alt = alt || '';
-    document.getElementById('lightbox').classList.add('open');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxDescription = document.getElementById('lightboxDescription');
+const lightboxClose = document.getElementById('lightboxClose');
+
+function openLightbox(src, alt, title, description) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || '';
+    lightboxTitle.textContent = title || '';
+    lightboxDescription.textContent = description || '';
+    lightboxCaption.hidden = !(title || description);
+    lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
 function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
     document.body.style.overflow = '';
 }
 
@@ -191,8 +250,19 @@ document.addEventListener('keydown', e => {
 
 document.querySelectorAll('.photo-item').forEach(item => {
     item.addEventListener('click', () => {
-        openLightbox(item.dataset.lightboxSrc, item.dataset.lightboxAlt);
+        openLightbox(
+            item.dataset.lightboxSrc,
+            item.dataset.lightboxAlt,
+            item.dataset.lightboxTitle,
+            item.dataset.lightboxDescription
+        );
     });
 });
+
+lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) closeLightbox();
+});
+
+lightboxClose.addEventListener('click', closeLightbox);
 </script>
 {% endblock %}

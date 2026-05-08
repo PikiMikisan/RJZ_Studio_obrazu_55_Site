@@ -12,6 +12,7 @@ class PortfolioTemplateTests(TestCase):
     def test_portfolio_page_handles_titles_with_apostrophes(self):
         photo = PortfolioPhoto.objects.create(
             title="Jan's sesja",
+            description="Pelny opis zdjecia z detalami & klimatem.",
             image="portfolio/test.jpg",
         )
 
@@ -19,6 +20,8 @@ class PortfolioTemplateTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'data-lightbox-alt="Jan&#x27;s sesja"')
+        self.assertContains(response, 'data-lightbox-description="Pelny opis zdjecia z detalami &amp; klimatem."')
+        self.assertContains(response, 'id="lightboxDescription"')
         self.assertNotContains(response, 'onclick="openLightbox')
         self.assertContains(response, photo.image.url)
 
